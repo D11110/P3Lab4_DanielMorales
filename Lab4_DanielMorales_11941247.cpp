@@ -38,10 +38,15 @@ public:
     static void mostrarCartas(Jugador &);
     static void mostrarPuntuacion(Jugador &);
     static int retornaPuntuacion(Jugador &);
+    static string retornaNombre(Jugador &);
 };
 
 Juego::Juego()
 {
+}
+
+string Juego::retornaNombre(Jugador &j){
+    return j.nombre;
 }
 
 int Juego::retornaPuntuacion(Jugador &j)
@@ -286,7 +291,7 @@ int main()
         }
         else
         {
-            break;
+            primerIntento = false;
         }
 
         while (confirmacionUsuario > 2 || confirmacionUsuario < 0)
@@ -339,24 +344,112 @@ int main()
 
                     baraja.erase(baraja.begin() + indCartaGeneradaBot);
                     limiteRandom--;
-                    int posibilidad = 0;
+                    int posibilidad = 1 + rand() % 100;
+                    bool jugara = false;
 
                     if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 0 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 10)
                     {
-                        posibilidad = 1 + rand() % 100;
+                        if (posibilidad < 101)
+                        {
+                            jugara = true;
+                        }
                     }
                     else if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 10 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 20)
                     {
-                        posibilidad = 1 + rand() % 80;
-                    }else if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 20 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 30)
+                        if (posibilidad < 81)
+                        {
+                            jugara = true;
+                        }
+                    }
+                    else if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 20 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 30)
                     {
-                        posibilidad = 1 + rand() % 40;
-                    }else if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 30 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 31)
+                        if (posibilidad < 41)
+                        {
+                            jugara = true;
+                        }
+                    }
+                    else if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 30 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 31)
                     {
-                        posibilidad = 1 + rand() % 10;
+                        if (posibilidad < 11)
+                        {
+                            jugara = true;
+                        }
+                    }
+
+                    while (jugara)
+                    {
+                        int indCartaGeneradaBot = (1 + rand() % (limiteRandom)) - 1;
+                        string cartaObtenidaBot = baraja.at(indCartaGeneradaBot);
+                        Juego::JugarJugador(jugadoresJugando.at(i), cartaObtenidaBot);
+
+                        baraja.erase(baraja.begin() + indCartaGeneradaBot);
+                        limiteRandom--;
+                        int posibilidad = 1 + rand() % 100;
+
+                        if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 0 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 10)
+                        {
+                            if (posibilidad < 101)
+                            {
+                                jugara = true;
+                            }
+                            else
+                            {
+                                botVivo = false;
+                            }
+                        }
+                        else if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 10 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 20)
+                        {
+                            if (posibilidad < 81)
+                            {
+                                jugara = true;
+                            }
+                            else
+                            {
+                                botVivo = false;
+                            }
+                        }
+                        else if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 20 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 30)
+                        {
+                            if (posibilidad < 41)
+                            {
+                                jugara = true;
+                            }
+                            else
+                            {
+                                botVivo = false;
+                            }
+                        }
+                        else if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 30 || Juego::retornaPuntuacion(jugadoresJugando.at(i)) < 31)
+                        {
+                            if (posibilidad < 11)
+                            {
+                                jugara = true;
+                            }
+                            else
+                            {
+                                botVivo = false;
+                            }
+                        }
+
                     }
                 }
             }
         }
+
     }
+
+    jugadoresJugando.push_back(jugador1);
+    int acum=1;
+
+    for (int i = 0; i < jugadoresJugando.size(); i++)
+    {
+        if (Juego::retornaPuntuacion(jugadoresJugando.at(i)) > 31)
+        {
+            std::cout << "Perdedor: " << Juego::retornaNombre(jugadoresJugando.at(i)) << " puntos: " << Juego::retornaPuntuacion(jugadoresJugando.at(i)) << std::endl;
+        } else if(Juego::retornaPuntuacion(jugadoresJugando.at(i)) <= 31){
+             std::cout << acum << ". " << "Ganador: " << Juego::retornaNombre(jugadoresJugando.at(i)) << " puntos: " << Juego::retornaPuntuacion(jugadoresJugando.at(i)) << std::endl;
+        }
+        
+    }
+
 }
